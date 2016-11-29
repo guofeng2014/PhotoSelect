@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="50dip"
+        android:background="#53CAC3"
+        android:gravity="center"
+        android:text="选择照片"
+        android:textColor="#FFF" />
+
+    <GridView
+        android:id="@+id/gv"
+        android:layout_width="match_parent"
+        android:layout_height="0dip"
+        android:layout_weight="1"
+        android:cacheColorHint="#00000000"
+        android:horizontalSpacing="1dip"
+        android:listSelector="#53CAC3"
+        android:numColumns="3"
+        android:stretchMode="columnWidth"
+        android:verticalSpacing="1dip" />
+
+    <RelativeLayout
+        android:id="@+id/rl_select_bar"
+        android:layout_width="match_parent"
+        android:layout_height="50dip"
+        android:background="#53CAC3">
+
+        <TextView
+            android:id="@+id/tv_dir_name"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:gravity="center"
+            android:paddingLeft="10dip"
+            android:paddingRight="10dip"
+            android:singleLine="true"
+            android:text=""
+            android:textColor="@android:color/white"
+            android:textSize="15dip" />
+
+        <TextView
+            android:id="@+id/tv_dir_count"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:gravity="center"
+            android:paddingLeft="10dip"
+            android:paddingRight="10dip"
+            android:singleLine="true"
+            android:text=""
+            android:textColor="@android:color/white"
+            android:textSize="15dip" />
+
+    </RelativeLayout>
+
+</LinearLayout>

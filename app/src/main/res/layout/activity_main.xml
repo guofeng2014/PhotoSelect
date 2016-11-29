@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000"
+    android:orientation="vertical"
+    tools:context="com.photoselect.MainActivity">
+
+    <TextView
+        android:id="@+id/tv_choose_local"
+        android:layout_width="match_parent"
+        android:layout_height="50dip"
+        android:background="#FFF"
+        android:gravity="center"
+        android:text="加载本地图片"
+        android:textColor="#000"
+        android:textSize="15dip" />
+
+    <TextView
+        android:layout_marginTop="10dip"
+        android:id="@+id/tv_load_net"
+        android:layout_width="match_parent"
+        android:layout_height="50dip"
+        android:background="#FFF"
+        android:gravity="center"
+        android:text="加载网络图片"
+        android:textColor="#000"
+        android:textSize="15dip" />
+
+    <TextView
+        android:id="@+id/tv_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:lineSpacingExtra="5dip"
+        android:padding="10dip"
+        android:textColor="#FFF"
+        android:textSize="14dip" />
+</LinearLayout>
