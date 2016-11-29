@@ -100,24 +100,18 @@ public class NetTaskRunnable implements Runnable {
                 try {
                     String fileNameEncode = StringUtil.generateNetPhotoCacheKey(imageInfo.getPath());
                     String savePath = FileCacheImp.CACHE_PATH + fileNameEncode;
-                    //从本地加载
+                    //从本地缓存是否存在
                     boolean contain = fileCache.contain(fileNameEncode);
-                    if (contain) {
-                        //修改URL为本地缓存路径
-                        imageInfo.setPath(savePath);
-                        new LocalTaskRunnable(imageInfo, bitmapConfig,
-                                memoryCache, cacheKeyForImageAware, width, height, uIHandler).run();
-                    }
-                    //从网络加载,保存到文件缓存
-                    else {
-                        //下载文件到本地
+                    //本地缓存不存在,下载图片到本地
+                    if (!contain) {
                         InputStream inputStream = netFileStream.getFileInputStream();
                         FileUtil.saveToSdCard(inputStream, savePath);
-                        imageInfo.setPath(savePath);
-                        //从本地读取图片
-                        new LocalTaskRunnable(imageInfo, bitmapConfig,
-                                memoryCache, cacheKeyForImageAware, width, height, uIHandler).run();
                     }
+                    //修改URL为本地缓存路径
+                    imageInfo.setPath(savePath);
+                    //从本地读取图片
+                    new LocalTaskRunnable(imageInfo, bitmapConfig,
+                            memoryCache, cacheKeyForImageAware, width, height, uIHandler).run();
                 } catch (NotMountedSDCardException e) {
                     e.printStackTrace();
                     //没有挂载SD卡和网络处理一样

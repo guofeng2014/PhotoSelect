@@ -31,17 +31,39 @@ public class StringUtil {
         }
     }
 
+    /**
+     * 手机内存卡的缓存key是去掉file://后的完整部分[mnt/sdcard/]
+     *
+     * @param uri
+     * @param width
+     * @param height
+     * @return
+     */
     public static String generateLocalPhotoCacheKey(String uri, int width, int height) {
         //本地文件去掉(file://)头部数据
         uri = ImageDownLoader.crop(uri);
         return encode(uri) + "-" + width + "X" + height;
     }
 
+    /**
+     * 网络图片的缓存key是文件名_Width X HEIGHT
+     *
+     * @param uri
+     * @param width
+     * @param height
+     * @return
+     */
     public static String generateNetPhotoCacheKey(String uri, int width, int height) {
         int position = uri.lastIndexOf("/");
         return encode(uri.substring(position)) + "-" + width + "X" + height;
     }
 
+    /**
+     * 保存网络图片都内存卡，获取链接的文件名,保存原图
+     *
+     * @param uri
+     * @return
+     */
     public static String generateNetPhotoCacheKey(String uri) {
         int position = uri.lastIndexOf("/");
         return encode(uri.substring(position));
