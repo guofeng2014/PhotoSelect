@@ -93,7 +93,7 @@ public class NetTaskRunnable implements Runnable {
         if (bitmap == null) {
             //文件缓存没有开启，网络加载
             if (fileCache == null) {
-                loadPhotoFromNet();
+                if (handleIoException()) return;
             }
             //开启文件缓存
             else {
@@ -104,7 +104,8 @@ public class NetTaskRunnable implements Runnable {
                     boolean contain = fileCache.contain(fileNameEncode);
                     //本地缓存不存在,下载图片到本地
                     if (!contain) {
-                        InputStream inputStream = netFileStream.getFileInputStream();
+                        InputStream inputStream = null;
+                        inputStream = netFileStream.getFileInputStream();
                         FileUtil.saveToSdCard(inputStream, savePath);
                     }
                     //修改URL为本地缓存路径
@@ -115,7 +116,12 @@ public class NetTaskRunnable implements Runnable {
                 } catch (NotMountedSDCardException e) {
                     e.printStackTrace();
                     //没有挂载SD卡和网络处理一样
-                    loadPhotoFromNet();
+                    if (handleIoException()) return;
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    //网络异常,刷新Ui
+                    refreshUI();
+                    return;
                 }
             }
         }
@@ -126,21 +132,34 @@ public class NetTaskRunnable implements Runnable {
     }
 
     /**
+     * 处理IOException
+     *
+     * @return
+     */
+    private boolean handleIoException() {
+        try {
+            loadPhotoFromNet();
+        } catch (IOException e1) {
+            e1.printStackTrace();
+            //网络异常,刷新Ui
+            refreshUI();
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * 从网络加载图片流程
      */
-    private void loadPhotoFromNet() {
+    private void loadPhotoFromNet() throws IOException {
         InputStream inputStream = netFileStream.getFileInputStream();
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
         decodeStream(inputStream, null, options);
         int srcWidth = options.outWidth;
         int srcHeight = options.outHeight;
-        try {
-            inputStream.reset();
-            inputStream.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        inputStream.reset();
+        inputStream.close();
         options.inSampleSize = netFileStream.calculateInSampleSize(srcWidth, srcHeight, width, height);
         options.inJustDecodeBounds = false;
         //重新获得输入流

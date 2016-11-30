@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
 
         ImageLoaderConfig config = new ImageLoaderConfig.Builder()
                 .setDefaultResourceId(R.mipmap.bg_album_def)
-                .setErrorResourceId(R.mipmap.bg_album_def)
+                .setErrorResourceId(R.mipmap.bg_album_error)
                 .setThreadCount(3)
                 .setImageConfig(Bitmap.Config.RGB_565)
                 .setOpenFileCache(true)

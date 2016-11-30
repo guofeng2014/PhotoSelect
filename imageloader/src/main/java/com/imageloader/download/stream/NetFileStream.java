@@ -27,14 +27,9 @@ public class NetFileStream extends DecodeAndStream {
     }
 
     @Override
-    public InputStream getFileInputStream() {
-        try {
-            HttpURLConnection conn = createConnection(url);
-            return conn.getInputStream();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
+    public InputStream getFileInputStream() throws IOException {
+        HttpURLConnection conn = createConnection(url);
+        return conn.getInputStream();
     }
 
     protected HttpURLConnection createConnection(String url) throws IOException {

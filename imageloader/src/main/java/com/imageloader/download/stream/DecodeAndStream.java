@@ -4,6 +4,7 @@ import com.imageloader.error.TaskCancelException;
 import com.imageloader.info.ImageInfo;
 import com.imageloader.view.BaseRenderingView;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
 
@@ -19,7 +20,7 @@ public abstract class DecodeAndStream {
     /**
      * 返回Sd卡或网络文件流
      */
-    abstract InputStream getFileInputStream();
+    abstract InputStream getFileInputStream()throws IOException;
 
     /**
      * 计算图片压缩比例
