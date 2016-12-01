@@ -109,9 +109,7 @@ public class NetTaskRunnable implements Runnable {
                     boolean contain = fileCache.contain(fileNameEncode);
                     //本地缓存不存在,下载图片到本地
                     if (!contain) {
-                        InputStream inputStream = null;
-                        inputStream = netFileStream.getFileInputStream();
-                        FileUtil.saveToSdCard(inputStream, savePath);
+                        FileUtil.saveToSdCard(netFileStream.getFileInputStream(), savePath);
                     }
                     //修改URL为本地缓存路径
                     imageInfo.setPath(savePath);
@@ -122,6 +120,7 @@ public class NetTaskRunnable implements Runnable {
             }
             //缓存存在,刷新Ui
             else {
+                imageInfo.setBitmap(bitmap);
                 refreshUI();
             }
         } catch (NotMountedSDCardException e) {
