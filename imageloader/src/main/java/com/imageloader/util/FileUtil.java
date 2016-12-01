@@ -13,7 +13,10 @@ import static com.imageloader.cache.file.FileCacheImp.CACHE_PATH;
  * 日期:2016/11/28
  */
 
-public class FileUtil {
+public final class FileUtil {
+    private FileUtil() {
+    }
+
     /**
      * 创建文件夹
      *

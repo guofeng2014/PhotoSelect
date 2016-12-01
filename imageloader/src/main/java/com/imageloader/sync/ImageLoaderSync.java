@@ -12,7 +12,9 @@ import java.util.concurrent.locks.ReentrantLock;
  * 给每个加载的路径添加一个同步锁,防止在ListView/GridView 等控件中重复加载
  */
 
-public class ImageLoaderSync {
+public final class ImageLoaderSync {
+    private ImageLoaderSync() {
+    }
 
     private static Map<String, ReentrantLock> lockMap = new WeakHashMap<>();
 

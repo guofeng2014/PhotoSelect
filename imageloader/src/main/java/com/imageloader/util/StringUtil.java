@@ -13,7 +13,10 @@ import java.net.URLEncoder;
  * ＊ 日期:2016/11/28
  */
 
-public class StringUtil {
+public final class StringUtil {
+    private StringUtil() {
+    }
+
     /**
      * 根据文件的路径生成缓存的key
      *
