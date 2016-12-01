@@ -13,6 +13,7 @@ import com.imageloader.download.ImageDownLoader;
 import com.imageloader.download.task.LocalTaskRunnable;
 import com.imageloader.download.task.NetTaskRunnable;
 import com.imageloader.info.ImageInfo;
+import com.imageloader.sync.ImageLoaderSync;
 import com.imageloader.util.AnimationUtils;
 import com.imageloader.util.StringUtil;
 import com.imageloader.view.BaseRenderingView;
@@ -82,6 +83,7 @@ public class ImageLoader {
         imageInfo.setCacheKey(cacheKey);
         imageInfo.setImageView(imageAware);
         imageInfo.setPath(uri);
+        imageInfo.setReentrantLock(ImageLoaderSync.get(uri));
         imageInfo.setHasAnimation(loaderConfig.isOpenAnimation());
         //缓存存在,刷新UI
         if (bitmap != null && !bitmap.isRecycled()) {
@@ -129,6 +131,7 @@ public class ImageLoader {
         threadPools.execute(taskRunnable);
     }
 
+
     /**
      * 统一刷新UI
      */
@@ -168,7 +171,10 @@ public class ImageLoader {
      */
     public void release() {
         imageLoader = null;
+        //清空缓存
         loaderConfig.getmLruCache().clear();
+        //清空路径同步锁
+        ImageLoaderSync.clear();
     }
 }
 

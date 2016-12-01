@@ -4,6 +4,8 @@ import android.graphics.Bitmap;
 
 import com.imageloader.view.BaseRenderingView;
 
+import java.util.concurrent.locks.ReentrantLock;
+
 
 public class ImageInfo {
 
@@ -12,6 +14,7 @@ public class ImageInfo {
     private String cacheKey;
     private boolean hasAnimation;
     private BaseRenderingView imageView;
+    private ReentrantLock reentrantLock;
 
 
     public void setBitmap(Bitmap bitmap) {
@@ -52,5 +55,13 @@ public class ImageInfo {
 
     public BaseRenderingView getImageView() {
         return imageView;
+    }
+
+    public void setReentrantLock(ReentrantLock reentrantLock) {
+        this.reentrantLock = reentrantLock;
+    }
+
+    public ReentrantLock getReentrantLock() {
+        return reentrantLock;
     }
 }

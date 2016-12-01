@@ -9,8 +9,10 @@ import com.imageloader.cache.memory.MemoryCache;
 import com.imageloader.download.stream.LocalFileStream;
 import com.imageloader.error.TaskCancelException;
 import com.imageloader.info.ImageInfo;
+import com.imageloader.sync.ImageLoaderSync;
 
 import java.util.Map;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * 作者：guofeng
@@ -51,6 +53,7 @@ public class LocalTaskRunnable implements Runnable {
      */
     private LocalFileStream localFileStream;
 
+
     public LocalTaskRunnable(ImageInfo imageInfo, Bitmap.Config bitmapConfig,
                              MemoryCache memoryCache, Map<Integer, String> cacheKeyForImageAware,
                              int width, int height, Handler uIHandler) {
@@ -73,23 +76,27 @@ public class LocalTaskRunnable implements Runnable {
             e.printStackTrace();
             return;
         }
+        //其他线程已经在下载
+        if (ImageLoaderSync.isContain(imageInfo.getPath())) return;
+        //获得该路径的同步锁对象
+        ReentrantLock reentrantLock = imageInfo.getReentrantLock();
+        //给路径加锁
+        reentrantLock.lock();
         //从缓存获取
         Bitmap bitmap = memoryCache.get(imageInfo.getCacheKey());
         //缓存不存在,[压缩图片][保存到缓存][刷新UI]
         if (bitmap == null) {
             //压缩图片
-            Bitmap decodeBitmap = decodeBitmap(imageInfo.getPath());
+            bitmap = decodeBitmap(imageInfo.getPath());
             //保存到缓存
-            memoryCache.add(imageInfo.getCacheKey(), decodeBitmap);
-            imageInfo.setBitmap(decodeBitmap);
-            //刷新UI
-            refreshUi();
+            memoryCache.add(imageInfo.getCacheKey(), bitmap);
         }
-        //缓存存在,刷新UI
-        else {
-            //刷新UI
-            refreshUi();
-        }
+        //添加刷新ImageInfo厘米bitmap
+        imageInfo.setBitmap(bitmap);
+        //释放锁
+        reentrantLock.unlock();
+        //刷新UI
+        refreshUi();
     }
 
 

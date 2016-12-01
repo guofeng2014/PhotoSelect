@@ -11,6 +11,7 @@ import android.view.Window;
 import android.widget.TextView;
 
 import com.imageloader.ImageLoader;
+import com.imageloader.cache.memory.MemoryCacheImp;
 import com.imageloader.config.ImageLoaderConfig;
 
 import java.util.ArrayList;
@@ -33,7 +34,8 @@ public class MainActivity extends AppCompatActivity {
                 .setErrorResourceId(R.mipmap.bg_album_error)
                 .setThreadCount(3)
                 .setImageConfig(Bitmap.Config.RGB_565)
-                .setOpenFileCache(true)
+                .setmLruCache(new MemoryCacheImp())
+//                .setOpenFileCache(true)
                 .build();
         com.imageloader.ImageLoader.getInstance().initConfig(config);
 

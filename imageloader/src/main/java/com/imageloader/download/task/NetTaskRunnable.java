@@ -18,6 +18,7 @@ import com.imageloader.util.StringUtil;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
+import java.util.concurrent.locks.ReentrantLock;
 
 import static android.graphics.BitmapFactory.decodeStream;
 
@@ -87,17 +88,21 @@ public class NetTaskRunnable implements Runnable {
             e.printStackTrace();
             return;
         }
-        //从缓存获取
-        Bitmap bitmap = memoryCache.get(imageInfo.getCacheKey());
-        //缓存不存在,从文件获取
-        if (bitmap == null) {
-            //文件缓存没有开启，网络加载
-            if (fileCache == null) {
-                if (handleIoException()) return;
-            }
-            //开启文件缓存
-            else {
-                try {
+        //获得该路径的同步锁对象
+        ReentrantLock reentrantLock = imageInfo.getReentrantLock();
+        //给路径加锁
+        reentrantLock.lock();
+        try {
+            //从缓存获取
+            Bitmap bitmap = memoryCache.get(imageInfo.getCacheKey());
+            //缓存不存在,从文件获取
+            if (bitmap == null) {
+                //文件缓存没有开启，网络加载
+                if (fileCache == null) {
+                    loadPhotoFromNet();
+                }
+                //开启文件缓存
+                else {
                     String fileNameEncode = StringUtil.generateNetPhotoCacheKey(imageInfo.getPath());
                     String savePath = FileCacheImp.CACHE_PATH + fileNameEncode;
                     //从本地缓存是否存在
@@ -113,40 +118,29 @@ public class NetTaskRunnable implements Runnable {
                     //从本地读取图片
                     new LocalTaskRunnable(imageInfo, bitmapConfig,
                             memoryCache, cacheKeyForImageAware, width, height, uIHandler).run();
-                } catch (NotMountedSDCardException e) {
-                    e.printStackTrace();
-                    //没有挂载SD卡和网络处理一样
-                    if (handleIoException()) return;
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    //网络异常,刷新Ui
-                    refreshUI();
-                    return;
                 }
             }
-        }
-        //缓存存在,刷新Ui
-        else {
+            //缓存存在,刷新Ui
+            else {
+                refreshUI();
+            }
+        } catch (NotMountedSDCardException e) {
+            e.printStackTrace();
+            //没有挂载SD卡和网络处理一样
+            try {
+                loadPhotoFromNet();
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            //网络异常,刷新Ui
             refreshUI();
+        } finally {
+            reentrantLock.unlock();
         }
     }
 
-    /**
-     * 处理IOException
-     *
-     * @return
-     */
-    private boolean handleIoException() {
-        try {
-            loadPhotoFromNet();
-        } catch (IOException e1) {
-            e1.printStackTrace();
-            //网络异常,刷新Ui
-            refreshUI();
-            return true;
-        }
-        return false;
-    }
 
     /**
      * 从网络加载图片流程
@@ -158,19 +152,13 @@ public class NetTaskRunnable implements Runnable {
         decodeStream(inputStream, null, options);
         int srcWidth = options.outWidth;
         int srcHeight = options.outHeight;
-        inputStream.reset();
         inputStream.close();
         options.inSampleSize = netFileStream.calculateInSampleSize(srcWidth, srcHeight, width, height);
         options.inJustDecodeBounds = false;
         //重新获得输入流
         inputStream = netFileStream.getFileInputStream();
         Bitmap decodeBitmap = BitmapFactory.decodeStream(inputStream, null, options);
-        try {
-            inputStream.reset();
-            inputStream.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        inputStream.close();
         //保存到缓存
         memoryCache.add(imageInfo.getCacheKey(), decodeBitmap);
         //同步数据到ImageInfo
