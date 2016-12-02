@@ -55,7 +55,7 @@ public class LocalTaskRunnable implements Runnable {
 
 
     public LocalTaskRunnable(ImageInfo imageInfo, Bitmap.Config bitmapConfig,
-                             MemoryCache memoryCache, Map<Integer, String> cacheKeyForImageAware,
+                             MemoryCache<String,Bitmap> memoryCache, Map<Integer, String> cacheKeyForImageAware,
                              int width, int height, Handler uIHandler) {
         this.imageInfo = imageInfo;
         this.bitmapConfig = bitmapConfig;
