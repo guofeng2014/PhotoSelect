@@ -31,7 +31,7 @@ public class LocalTaskRunnable implements Runnable {
     /**
      * 缓存
      */
-    private MemoryCache<String,Bitmap> memoryCache;
+    private MemoryCache<String, Bitmap> memoryCache;
     /**
      * 绑定 ImageView 和 cacheKey
      */
@@ -76,27 +76,33 @@ public class LocalTaskRunnable implements Runnable {
             e.printStackTrace();
             return;
         }
-        //其他线程已经在下载
-        if (ImageLoaderSync.isContain(imageInfo.getPath())) return;
-        //获得该路径的同步锁对象
-        ReentrantLock reentrantLock = imageInfo.getReentrantLock();
-        //给路径加锁
-        reentrantLock.lock();
-        //从缓存获取
-        Bitmap bitmap = memoryCache.get(imageInfo.getCacheKey());
-        //缓存不存在,[压缩图片][保存到缓存][刷新UI]
-        if (bitmap == null) {
-            //压缩图片
-            bitmap = decodeBitmap(imageInfo.getPath());
-            //保存到缓存
-            memoryCache.add(imageInfo.getCacheKey(), bitmap);
+        ReentrantLock reentrantLock = null;
+        try {
+            //其他线程已经在下载
+            if (ImageLoaderSync.isContain(imageInfo.getPath())) return;
+            //获得该路径的同步锁对象
+            reentrantLock = imageInfo.getReentrantLock();
+            //给路径加锁
+            reentrantLock.lock();
+            //从缓存获取
+            Bitmap bitmap = memoryCache.get(imageInfo.getCacheKey());
+            //缓存不存在,[压缩图片][保存到缓存][刷新UI]
+            if (bitmap == null) {
+                //压缩图片
+                bitmap = decodeBitmap(imageInfo.getPath());
+                //保存到缓存
+                memoryCache.add(imageInfo.getCacheKey(), bitmap);
+            }
+            //刷新ImageInfo的bitmap对象
+            imageInfo.setBitmap(bitmap);
+        } finally {
+            //释放锁
+            if (reentrantLock != null) {
+                reentrantLock.unlock();
+            }
+            //刷新UI
+            refreshUi();
         }
-        //刷新ImageInfo的bitmap对象
-        imageInfo.setBitmap(bitmap);
-        //释放锁
-        reentrantLock.unlock();
-        //刷新UI
-        refreshUi();
     }
 
 
