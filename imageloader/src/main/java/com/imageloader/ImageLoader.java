@@ -102,7 +102,7 @@ public class ImageLoader {
      * 选择启动任务类型[网络/本地]
      */
     private void chooseTask(ImageInfo imageInfo,
-                            MemoryCache memoryCache, Map<Integer, String> cacheKeyForImageAware,
+                            MemoryCache<String,Bitmap> memoryCache, Map<Integer, String> cacheKeyForImageAware,
                             int width, int height) {
         String uri = imageInfo.getPath();
         Runnable taskRunnable = null;
