@@ -90,7 +90,7 @@ public final class ImageLoaderConfig {
         return threadCount;
     }
 
-    public MemoryCache getmLruCache() {
+    public MemoryCache<String,Bitmap> getmLruCache() {
         return mLruCache;
     }
 

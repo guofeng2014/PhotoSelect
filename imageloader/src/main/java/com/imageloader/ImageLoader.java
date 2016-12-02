@@ -75,7 +75,7 @@ public class ImageLoader {
         Map<Integer, String> associateImageAndUri = loaderConfig.getAssociateImageAndUri();
         associateImageAndUri.put(imageAware.getId(), cacheKey);
         //从缓存取数据
-        MemoryCache memoryCache = loaderConfig.getmLruCache();
+        MemoryCache<String,Bitmap> memoryCache = loaderConfig.getmLruCache();
         Bitmap bitmap = memoryCache.get(cacheKey);
         //打包数据
         ImageInfo imageInfo = new ImageInfo();
