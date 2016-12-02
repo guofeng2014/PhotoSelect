@@ -5,7 +5,7 @@ package com.imageloader.download;
  * ＊ 日期:2016/11/28
  */
 
-public class ImageDownLoader {
+public final class ImageDownLoader {
 
     public static final String HEAD_HTTP = "http://";
     public static final String HEAD_HTTPS = "https://";

@@ -92,6 +92,7 @@ public class NetPhotoActivity extends AppCompatActivity {
             "http://img5.anzhi.com/data2/thumb/201607/15/dec8bcfc047bb557982aaeae342b61c0_22327300.jpg",
             "http://img1.anzhi.com/data2/thumb/201610/25/c1915fc1377d7a6ae3334081ee9248d1_48058700.jpg",
             "http://img3.anzhi.com/data2/thumb/201610/25/5a3ffb792e1140f8396062b8532c0c97_34958900.jpg",
+            "http://img3.imgtn.bdimg.com/it/u=344693131,848513461&fm=214&gp=0.jpg",
             "http://img3.anzhi.com/data2/thumb/201609/23/2edae645148860e76a0c5eb780649f9c_85820100.jpg");
 
     @Override
