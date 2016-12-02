@@ -9,7 +9,6 @@ import com.imageloader.cache.memory.MemoryCache;
 import com.imageloader.download.stream.LocalFileStream;
 import com.imageloader.error.TaskCancelException;
 import com.imageloader.info.ImageInfo;
-import com.imageloader.sync.ImageLoaderSync;
 
 import java.util.Map;
 import java.util.concurrent.locks.ReentrantLock;
@@ -78,8 +77,6 @@ public class LocalTaskRunnable implements Runnable {
         }
         ReentrantLock reentrantLock = null;
         try {
-            //其他线程已经在下载
-            if (ImageLoaderSync.isContain(imageInfo.getPath())) return;
             //获得该路径的同步锁对象
             reentrantLock = imageInfo.getReentrantLock();
             //给路径加锁
