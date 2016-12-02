@@ -66,7 +66,7 @@ public class NetTaskRunnable implements Runnable {
     private FileCache fileCache;
 
     public NetTaskRunnable(ImageInfo imageInfo, Bitmap.Config bitmapConfig,
-                           MemoryCache memoryCache, Map<Integer, String> cacheKeyForImageAware,
+                           MemoryCache<String,Bitmap> memoryCache, Map<Integer, String> cacheKeyForImageAware,
                            int width, int height, Handler uIHandler, FileCache fileCache) {
         this.imageInfo = imageInfo;
         this.bitmapConfig = bitmapConfig;
