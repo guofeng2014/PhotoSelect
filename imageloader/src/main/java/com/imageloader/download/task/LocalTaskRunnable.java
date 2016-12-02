@@ -91,7 +91,7 @@ public class LocalTaskRunnable implements Runnable {
             //保存到缓存
             memoryCache.add(imageInfo.getCacheKey(), bitmap);
         }
-        //添加刷新ImageInfo厘米bitmap
+        //刷新ImageInfo的bitmap对象
         imageInfo.setBitmap(bitmap);
         //释放锁
         reentrantLock.unlock();
