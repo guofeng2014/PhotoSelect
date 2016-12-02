@@ -89,15 +89,12 @@ public class ImageLoader {
         if (bitmap != null && !bitmap.isRecycled()) {
             Message message = Message.obtain();
             message.obj = imageInfo;
-            UIHandler.sendMessage(message);
-        }
-        //缓存不存在,加载图片
-        else {
-            //显示加载站位图
-            imageView.setImageResource(loaderConfig.getDefaultResourceId());
-            //启动线程
+            uiHandler.sendMessage(message);
+        } else {
+            //缓存不存在,加载图片
+            imageView.setImageResource(loaderConfig.getDefaultResourceId());//显示加载站位图
             chooseTask(imageInfo, memoryCache, associateImageAndUri,
-                    imageAware.getWidth(), imageAware.getHeight());
+                    imageAware.getWidth(), imageAware.getHeight()); //启动线程
         }
     }
 
@@ -113,13 +110,13 @@ public class ImageLoader {
         if (uri.startsWith(ImageDownLoader.HEAD_HTTP) || uri.startsWith(ImageDownLoader.HEAD_HTTPS)) {
             taskRunnable = new NetTaskRunnable(imageInfo, loaderConfig.getImageConfig(), memoryCache,
                     cacheKeyForImageAware, width, height,
-                    UIHandler, loaderConfig.getFileCache());
+                    uiHandler, loaderConfig.getFileCache());
         }
         //加载本地文件
         else if (uri.startsWith(ImageDownLoader.HEAD_FILE)) {
             imageInfo.setPath(ImageDownLoader.crop(uri));
             taskRunnable = new LocalTaskRunnable(imageInfo, loaderConfig.getImageConfig(),
-                    memoryCache, cacheKeyForImageAware, width, height, UIHandler);
+                    memoryCache, cacheKeyForImageAware, width, height, uiHandler);
         }
         if (taskRunnable == null) return;
         ExecutorService threadPools = loaderConfig.getThreadPool();
@@ -135,12 +132,12 @@ public class ImageLoader {
     /**
      * 统一刷新UI
      */
-    private Handler UIHandler = new Handler() {
+    private Handler uiHandler = new Handler(new Handler.Callback() {
         @Override
-        public void handleMessage(Message msg) {
-            ImageInfo imageInfo = (ImageInfo) msg.obj;
+        public boolean handleMessage(Message message) {
+            ImageInfo imageInfo = (ImageInfo) message.obj;
             BaseRenderingView view = imageInfo.getImageView();
-            if (view == null || view.isCollected()) return;
+            if (view == null || view.isCollected()) return true;
             Bitmap b = imageInfo.getBitmap();
             Map<Integer, String> associateImageAndUri = loaderConfig.getAssociateImageAndUri();
             String imageCacheKey = associateImageAndUri.get(view.getId());
@@ -150,7 +147,7 @@ public class ImageLoader {
                 //文件加载失败
                 if (b == null) {
                     view.setImageResource(loaderConfig.getErrorResourceId());
-                    return;
+                    return true;
                 }
                 //文件正常
                 view.setImageBitmap(b);
@@ -162,9 +159,9 @@ public class ImageLoader {
                     }
                 }
             }
-
+            return false;
         }
-    };
+    });
 
     /**
      * 是否缓存

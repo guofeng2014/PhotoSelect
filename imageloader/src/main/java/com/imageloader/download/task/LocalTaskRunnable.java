@@ -31,7 +31,7 @@ public class LocalTaskRunnable implements Runnable {
     /**
      * 缓存
      */
-    private MemoryCache memoryCache;
+    private MemoryCache<String,Bitmap> memoryCache;
     /**
      * 绑定 ImageView 和 cacheKey
      */

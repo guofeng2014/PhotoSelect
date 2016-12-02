@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
                 .setThreadCount(3)
                 .setImageConfig(Bitmap.Config.RGB_565)
                 .setmLruCache(new MemoryCacheImp())
-//                .setOpenFileCache(true)
+                .setOpenFileCache(true)
                 .build();
         com.imageloader.ImageLoader.getInstance().initConfig(config);
 

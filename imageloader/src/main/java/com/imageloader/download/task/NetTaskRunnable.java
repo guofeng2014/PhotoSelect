@@ -39,7 +39,7 @@ public class NetTaskRunnable implements Runnable {
     /**
      * 缓存
      */
-    private MemoryCache memoryCache;
+    private MemoryCache<String, Bitmap> memoryCache;
     /**
      * 绑定 ImageView 和 cacheKey
      */
@@ -100,9 +100,8 @@ public class NetTaskRunnable implements Runnable {
                 //文件缓存没有开启，网络加载
                 if (fileCache == null) {
                     loadPhotoFromNet();
-                }
-                //开启文件缓存
-                else {
+                } else {
+                    //开启文件缓存
                     String fileNameEncode = StringUtil.generateNetPhotoCacheKey(imageInfo.getPath());
                     String savePath = FileCacheImp.CACHE_PATH + fileNameEncode;
                     //从本地缓存是否存在
