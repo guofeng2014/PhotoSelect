@@ -36,7 +36,7 @@ public abstract class DecodeAndStream {
         if (srcWidth > width || srcHeight > height) {
             int widthRatio = Math.round(srcWidth * 1.0f / width);
             int heightRatio = Math.round(srcHeight * 1.0f / height);
-            inSampleSize = Math.max(widthRatio, heightRatio);
+            inSampleSize = Math.min(widthRatio, heightRatio);
         }
         return inSampleSize;
     }
